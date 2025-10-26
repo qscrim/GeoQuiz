@@ -55,57 +55,102 @@ fun GeoQuizApp() {
 
     var currentQuestionIndex by remember { mutableStateOf(0) }
     var isAnswered by remember { mutableStateOf(false) }
+    var score by remember { mutableStateOf(0) }
+    var showScore by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "GeoQuiz",
-            style = MaterialTheme.typography.headlineMedium
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        Text(
-            text = questions[currentQuestionIndex],
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-
-        if (!isAnswered) {
-            Button(
-                onClick = {
-                    isAnswered = true
-                }
-            ) {
-                Text(text = "True")
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = {
-                    isAnswered = true
-                }
-            ) {
-                Text(text = "False")
-            }
-        } else {
-            Text(
-                text = "Question answered!",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-        Button(
-            onClick = {
-                currentQuestionIndex = (currentQuestionIndex + 1) % questions.size
-                isAnswered = false
-            },
-            enabled = isAnswered && currentQuestionIndex < questions.size - 1
+    if (showScore) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Next")
+            Text(
+                text = "Quiz Completed!",
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(
+                text = "Your score: $score out of ${questions.size}",
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            Button(
+                onClick = {
+                    currentQuestionIndex = 0
+                    score = 0
+                    isAnswered = false
+                    showScore = false
+                }
+            ) {
+                Text(text = "Restart Quiz")
+            }
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "GeoQuiz",
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(
+                text = questions[currentQuestionIndex],
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+
+            if (!isAnswered) {
+                Button(
+                    onClick = {
+                        isAnswered = true
+                        if (answers[currentQuestionIndex] == true) {
+                            score++
+                        }
+                    }
+                ) {
+                    Text(text = "True")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+                        isAnswered = true
+                        if (answers[currentQuestionIndex] == false) {
+                            score++
+                        }
+                    }
+                ) {
+                    Text(text = "False")
+                }
+            } else {
+                Text(
+                    text = "Question answered!",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+            Button(
+                onClick = {
+                    if (currentQuestionIndex == questions.size - 1) {
+                        showScore = true
+                    } else {
+                        currentQuestionIndex++
+                        isAnswered = false
+                    }
+                },
+                enabled = isAnswered
+            ) {
+                Text(
+                    text = if (currentQuestionIndex == questions.size - 1) "Finish" else "Next"
+                )
+            }
         }
     }
 }
