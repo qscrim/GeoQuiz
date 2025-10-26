@@ -73,23 +73,30 @@ fun GeoQuizApp() {
             style = MaterialTheme.typography.bodyLarge
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Button(
-            onClick = {
-                isAnswered = true
-            },
-            enabled = !isAnswered
-        ) {
-            Text(text = "True")
+
+        if (!isAnswered) {
+            Button(
+                onClick = {
+                    isAnswered = true
+                }
+            ) {
+                Text(text = "True")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    isAnswered = true
+                }
+            ) {
+                Text(text = "False")
+            }
+        } else {
+            Text(
+                text = "Question answered!",
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = {
-                isAnswered = true
-            },
-            enabled = !isAnswered
-        ) {
-            Text(text = "False")
-        }
+
         Spacer(modifier = Modifier.height(32.dp))
         Button(
             onClick = {
