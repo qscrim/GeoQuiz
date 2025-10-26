@@ -14,6 +14,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +51,11 @@ fun GeoQuizApp() {
         "Lake Baikal is the world's oldest and deepest freshwater lake."
     )
 
+    val answers = listOf(true, true, false, false, true, true)
+
+    var currentQuestionIndex by remember { mutableStateOf(0) }
+    var isAnswered by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,19 +69,35 @@ fun GeoQuizApp() {
         )
         Spacer(modifier = Modifier.height(32.dp))
         Text(
-            text = questions[0],
+            text = questions[currentQuestionIndex],
             style = MaterialTheme.typography.bodyLarge
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = { }) {
+        Button(
+            onClick = {
+                isAnswered = true
+            },
+            enabled = !isAnswered
+        ) {
             Text(text = "True")
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { }) {
+        Button(
+            onClick = {
+                isAnswered = true
+            },
+            enabled = !isAnswered
+        ) {
             Text(text = "False")
         }
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = { }) {
+        Button(
+            onClick = {
+                currentQuestionIndex = (currentQuestionIndex + 1) % questions.size
+                isAnswered = false
+            },
+            enabled = isAnswered && currentQuestionIndex < questions.size - 1
+        ) {
             Text(text = "Next")
         }
     }
